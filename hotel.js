@@ -62,6 +62,12 @@ class Sistema{
     }               
     //Criando listas para armazenar as informacoes
 
+    //metodo de limpar a tela 
+    limparTela(){
+        console.clear();
+    }
+    
+    
     //funcao de gerar ID aleatorio de 5 digitos
     //ID's de comeco 0 serao funcionarios
     //ID's de comeco 1 serao clientes
@@ -93,32 +99,79 @@ class Sistema{
     //Cadastro de funcionario
     
     
-    cadastrarFuncionario(nomeFuncionario, dataNascimento, cpf, email, senha){
+    cadastrarFuncionario(nome, dataNascimento, cpf, email, senha){
         const id = this.gerarId(0, this.listaFuncionarios);
-        const funcionario = new Funcionario(id, nomeFuncionario, dataNascimento, cpf, email, senha);
+        const funcionario = new Funcionario(id, nome, dataNascimento, cpf, email, senha);
         this.listaFuncionarios.push(funcionario);
-        console.log(`Funcionario ${nomeFuncionario} cadastrado com sucesso!`); 
+        console.log(`Funcionario ${nome} cadastrado com sucesso!`); 
     }
 
     //Cadastro de cliente
 
-    cadastrarCliente(nomeCliente, cpf, email, senha){
+    cadastrarCliente(nome, cpf, email, senha){
         const id = this.gerarId(1, this.listaClientes);
-        const cliente = new Cliente(id, nomeCliente, cpf, email, senha);
+        const cliente = new Cliente(id, nome, cpf, email, senha);
         this.listaClientes.push(cliente);
-        console.log(`Cliente ${nomeCliente} cadastrado com sucesso!`);
+        console.log(`Cliente ${nome} cadastrado com sucesso!`);
     }
 
     login(email, senha){
-        const usuario = this.listaFuncionarios.find(funcionario){
-            return funcionario.email 
+        const funcionario = this.listaFuncionarios.find(function (funcionario) {
+            return funcionario.email == email && funcionario.senha == senha;        // Dara a relacao true ou false
+        });
+    
+        const cliente = this.listaClientes.find(function (cliente) {
+            return cliente.email == email && cliente.senha == senha;
+        });
+        
+        if(funcionario){
+            this.usuario = funcionario;
+            this.usuario.tipoUsuario = "funcionario";           // Adicionada uma propriedade para identificar se é funcionario
+            console.log(`Login realizado com sucesso! Bem-vindo ${usuario.nome} (funcionario)`);
+        } else if(cliente){
+            this.usuario = cliente;
+            this.usuario.tipoUsuario = "cliente";
+            console.log(`Login realizado com sucesso! Bem-vindo ${this.usuario.nome}`);
+        } else {
+            console.log("Email ou senha invalidos...");
         }
     }
 
+    logout(){
+        this.usuario = null;
+        console.log("O usuario fez logout da página. Voltando para tela inicial");
+    }
+    
+    //Metodos para funcionarios
 
+    verDadosFuncionario(){
+        if(this.usuario instanceof Funcionario)
+        {
+            this.limparTela();
+            console.log("------------- Dados Usuario -------------");
+            console.log(`Nome: ${this.usuario.nome}`);
+            console.log(`ID: ${this.usuario.id}`);
+            console.log(`CPF: ${this.usuario.cpf}`);
+            console.log(`Email: ${this.usuario.email}`);
+            console.log("-----------------------------------------");
 
+        } else {
+            console.log("Acesso restrito.");
+        }
+    }
 
+    verListaReservas(){
+        if(this.usuario instanceof Funcionario)
+        {
+            console.log("------------- Lista de Reservas -------------")
+            for 
+        }
+    }
+    
+    
+    
 }
+
 
 
 //No final fazer a tela interativa com o usuario e utilizar os metodos estabelecidos no Sistema
