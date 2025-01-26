@@ -1,3 +1,5 @@
+const prompt  = require('prompt-sync')();           //Biblioteca para o input (interacao com o usuario)
+
 class Reserva{
     constructor(id, id_cliente, status, dataEntrada, dataSaida){
         this.id = id;
@@ -99,18 +101,18 @@ class Sistema{
     //Cadastro de funcionario
     
     
-    cadastrarFuncionario(nome, dataNascimento, cpf, email, senha){
+    cadastrarFuncionario(nome, cpf, email, senha){
         const id = this.gerarId(0, this.listaFuncionarios);
-        const funcionario = new Funcionario(id, nome, dataNascimento, cpf, email, senha);
+        const funcionario = new Funcionario(id, nome, cpf, email, senha);
         this.listaFuncionarios.push(funcionario);
         console.log(`Funcionario ${nome} cadastrado com sucesso!`); 
     }
 
     //Cadastro de cliente
 
-    cadastrarCliente(nome, cpf, email, senha){
+    cadastrarCliente(nome, dataNascimento, cpf, email, senha){
         const id = this.gerarId(1, this.listaClientes);
-        const cliente = new Cliente(id, nome, cpf, email, senha);
+        const cliente = new Cliente(id, nome, dataNascimento, cpf, email, senha);
         this.listaClientes.push(cliente);
         console.log(`Cliente ${nome} cadastrado com sucesso!`);
     }
@@ -147,7 +149,7 @@ class Sistema{
     verDadosFuncionario(){
         if(this.usuario instanceof Funcionario)
         {
-            this.limparTela();
+            console.clear();
             console.log("------------- Dados Usuario -------------");
             console.log('');
             console.log(`Nome: ${this.usuario.nome}`);
@@ -165,7 +167,7 @@ class Sistema{
     verListaReservas(){
         if(this.usuario instanceof Funcionario)
         {
-            this.limparTela();
+            console.clear();
             console.log("----------- Lista de Reservas -----------");
             for(let i = 0; i < this.listaReservas.length; i++){
                 console.log('');
@@ -183,28 +185,25 @@ class Sistema{
     }
 
     verListaQuartos(){
-        if(this.usuario instanceof Funcionario)
-        {
-            this.limparTela();
-            console.log("----------- Lista de Quartos -----------");
-            for(let i = 0; i < this.listaQuartos.length; i++){
-                console.log('');
-                console.log(`Quarto ${this.listaQuartos[i].numeroQuarto}:`);
-                console.log(`Quantidade de camas: ${this.listaQuartos[i].quantasCamas}`);
-                console.log(`Preco por noite: R$${this.listaQuartos[i].precoPorNoite}`);
-                console.log(`Quantidade disponivel: ${this.listaQuartos[i].quantidadeDisponivel}`);
-                console.log(`Descricao: \n${this.listaQuartos[i].descricao}`);
-            }
-            console.log("-----------------------------------------");
-        } else {
-            console.log("Acesso restrito.");
+
+        console.clear();
+        console.log("----------- Lista de Quartos -----------");
+        for(let i = 0; i < this.listaQuartos.length; i++){
+            console.log('');
+            console.log(`Quarto ${this.listaQuartos[i].numeroQuarto}:`);
+            console.log(`Quantidade de camas: ${this.listaQuartos[i].quantasCamas}`);
+            console.log(`Preco por noite: R$${this.listaQuartos[i].precoPorNoite}`);
+            console.log(`Quantidade disponivel: ${this.listaQuartos[i].quantidadeDisponivel}`);
+            console.log(`Descricao: \n${this.listaQuartos[i].descricao}`);
         }
+        console.log("-----------------------------------------");
+
     }
 
     verinfosCliente(infoCliente){
         if(this.usuario instanceof Funcionario)
         {
-            this.limparTela();
+            console.clear();
             console.log(`----------- ${infoCliente.nome} -----------`);
             for(let i = 0; i < infoCliente.length; i++){
                 console.log('');
@@ -222,7 +221,7 @@ class Sistema{
     verListaClientes(){
         if(this.usuario instanceof Funcionario)
         {
-            this.limparTela();
+            console.clear();
             console.log(`---------- Lista de Clientes -----------------`);
             for(let i = 0; i < this.listaClientes.length; i++){
                 console.log(`${i+1}. ${this.listaClientes[i].nome}`);
@@ -237,7 +236,9 @@ class Sistema{
     mudarStatusReserva(reservaId, novoStatus){
         if(this.usuario instanceof Funcionarios)
         {
-            const reserva = this.reservas.find(r => r.id === reservaId);
+            const reserva = this.listaReservas.find(function (q) {
+                return q.id == reservaId;
+            });
             if (reserva) {
                 reserva.status = novoStatus;
                 console.log("Status da reserva atualizado.");
@@ -260,15 +261,254 @@ class Sistema{
         }
     }
 
+    removerQuarto(numerodoQuarto){
+        let encontrado = false;
 
+        for (let i = 0; i < this.listaQuartos.length; i++) {
+            if (this.listaQuartos[i].numeroQuarto == numerodoQuarto) {
+                this.listaQuartos.splice(i, 1); // Remove o quarto pelo índice
+                encontrado = true;
+                console.log(`Quarto ${numerodoQuarto} removido com sucesso.`);
+                break; // Interrompe o loop após remover o quarto
+            }
+        }
+    
+        if (!encontrado) {
+            console.log(`Quarto ${numerodoQuarto} não encontrado.`);
+        }
+    }
+    
 
+    editarQuarto(numerodoQuarto){
+        const quarto = this.listaQuartos.find(function (q) {
+            return q.numeroQuarto == numerodoQuarto;
+        });
+
+        if(quarto)
+        {
+            console.log(`--- Editar Quarto ${numerodoQuarto} ---`);
+            console.log("1. Numero do quarto: " + quarto.numeroQuarto);
+            console.log("2. Descrição: " + quarto.descricao);
+            console.log("3. Quantas Camas: " + quarto.quantasCamas);
+            console.log("4. Preço por Noite: " + quarto.precoPorNoite);
+            console.log("5. Quantidade Disponível: " + quarto.quantidadeDisponivel);
+            console.log("0. Cancelar");
+            console.log("");
+        
+            const opcao = prompt("Escolha um numero da informacao que deseja editar: ");
+
+            switch(opcao)
+            {
+                case "1":
+                    const novoNumero = prompt("Novo numero do quarto: ");
+                    quarto.numeroQuarto = novoNumero;
+                    console.log("Novo numero adicionado!");
+                    break;
+
+                case "2":
+                    const novaDescricao = prompt("Nova descricao: ");
+                    quarto.descricao = novaDescricao;
+                    console.log("Nova descricao adicionada!");
+                    break;
+
+                case "3":
+                    const novasCamas = prompt("Quantas camas: ");
+                    quarto.quantasCamas = Number(novasCamas);
+                    console.log("Numero de camas atualizado!");
+                    break;
+
+                case "4":
+                    const novoPreco = prompt("Novo preco por noite: ");
+                    quarto.precoPorNoite = Number(novoPreco);
+                    console.log("Preco por noite atualizado!");
+                    break;
+
+                case "5":
+                    const novaQuantidadeDisponivel = prompt("Nova quantidade disponivel: ");
+                    quarto.quantidadeDisponivel = novaQuantidadeDisponivel;
+                    console.log("Quantidade de quartos atualizada! ");
+                    break;
+
+                case "0":
+                    console.log("Edicao cancelada ");
+                    break;
+                
+                default:
+                    console.log("Opcao invalida");
+                    break;
+                
+            } 
+
+        } else {
+            console.log(`Quarto ${numerodoQuarto} nao encontrado.`);
+
+        }
+
+    }
+
+    //Metodos dos clientes 
+
+    verDadosCliente(){
+        
+        console.clear();
+        console.log("------------- Dados Usuario -------------");
+        console.log('');
+        console.log(`Nome: ${this.usuario.nome}`);
+        console.log(`ID: ${this.usuario.id}`);
+        console.log(`CPF: ${this.usuario.cpf}`);
+        console.log(`Data de nascimento: ${this.usuario.dataNascimento}`);
+        console.log(`Email: ${this.usuario.email}`);
+        console.log('');
+        console.log("-----------------------------------------");
+             
+    }
+
+    fazerReserva(clienteId, dataEntrada, dataSaida) {
+        const id = this.listaReservas.length + 1;
+        const reserva = new Reserva(id, clienteId, "pendente", dataEntrada, dataSaida);
+        this.listaReservas.push(reserva);
+        console.log("Reserva criada com sucesso!");
+        
+    }
+    
+    cancelarReserva(reservaId) {
+        const reserva = this.listaReservas.find(function (q) {
+            return q.id == reservaId;
+        });
+        if (reserva) {
+            reserva.status = "cancelada";
+            console.log("Reserva cancelada com sucesso!");
+        } else {
+        console.log("Reserva não encontrada ou acesso negado.");
+        }
+    }    
+    
+    verMinhasReservas(clienteId){
+        if (this.usuario instanceof Cliente && this.usuario.id == clienteId) {
+            const minhasReservas = this.listaReservas.filter(function(r) {
+                return r.id_cliente == clienteId;
+
+            });
+            
+            console.clear();
+            console.log('---------- Minhas Reservas ----------');
+
+            if(minhasReservas.length === 0)
+            {
+                console.log("Voce nao possui reservas!");
+            } else {
+                for(let i = 0; i < minhasReservas.length; i++){
+                    const reserva = minhasReservas[i];
+                    console.log(`Reserva ${i + 1}:`);
+                    console.log(`ID da Reserva: ${reserva.id}`);
+                    console.log(`Status: ${reserva.status}`);
+                    console.log(`Data de Entrada: ${reserva.dataEntrada}`);
+                    console.log(`Data de Saída: ${reserva.dataSaida}`);
+                    console.log('-------------------------------------');
+
+                }
+            }            
+        } else {
+            console.log("Acesso negado.");
+        }
+    }        
+
+}
+
+function telaFazerLogin(){
+    console.clear();
+    console.log("--------- Login --------");
+    const email = prompt("Email: ");
+    const senha = prompt ("Senha: ");
+
+    sistema.login(email, senha);
+
+    if(sistema.usuario){
+    if (sistema.usuario.tipoUsuario === "funcionario")
+    {
+        menuFuncionario(sistema);
+    } else if(sistema.usuario.tipoUsuario === "cliente") 
+    {
+        menuCliente(sistema);
+    } else {
+        prompt("Pressione Enter para voltar ao menu")
+    }
+    }
+}
+
+function telaFazerCadastro(){
+    console.clear();
+    console.log("-------- Cadastro --------");
+    console.log("1. Cadastro de funcionario");
+    console.log("2. Cadastro de cliente");
+    console.log("3. Voltar");
+
+    const opcao = prompt("Escolha uma opcao: ");
+
+    switch(opcao){                                          // Ver se da para verificar a data de nascimento
+        case "1":
+            const nomeFuncionario = prompt("Nome: ");
+            const cpfFuncionario = prompt("CPF: ");
+            const emailFuncionario = prompt("Email: ");
+            const senhaFuncionario = prompt("Senha: ");
+            sistema.cadastrarFuncionario(nomeFuncionario, cpfFuncionario, emailFuncionario, senhaFuncionario);
+            break;
+
+        case "2":
+            const nomeCliente = prompt("Nome: ");
+            const cpfCliente = prompt("CPF: ");
+            const dataNascimento = prompt("Data de nascimento(Dia/mes/ano): ")
+            const emailCliente = prompt("Email: ");
+            const senhaCliente = prompt("Senha: ");
+            sistema.cadastrarFuncionario(nomeCliente, dataNascimento, cpfCliente, emailCliente, senhaCliente);
+            break;
+        
+        case "3":
+            return;
+        
+        default:
+            console.log("Opcao invalida. Tente novamente!");
+    }
+    prompt("Pressione Enter para continuar...");
 }
 
 
 
+function main(){
+    const sistema = new Sistema();
+    while (true){
+        console.clear();
+        console.log("----------- Bem-vindo ao Hotel F-luxo -----------");
+        console.log("1. Fazer Login");
+        console.log("2. Fazer Cadastro");
+        console.log("3. Sair do Programa");
+
+        const opcao = prompt("Escolha uma opcao: ")
+
+        switch(opcao){
+            case "1":
+                telaFazerLogin(sistema);
+                break;
+
+            case "2":
+                telaFazerCadastro(sistema);
+                break;
+
+            case "3":
+                console.log("Encerrando sistema...");
+                return;
+            default:
+                console.log("Opcao Invalida. Escolha uma opcao de 1 a 3");
+
+        }
+    }
 
 
-    
+
+
+
+}
+
 
 main()
 
