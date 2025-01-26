@@ -149,12 +149,14 @@ class Sistema{
         {
             this.limparTela();
             console.log("------------- Dados Usuario -------------");
+            console.log('');
             console.log(`Nome: ${this.usuario.nome}`);
             console.log(`ID: ${this.usuario.id}`);
             console.log(`CPF: ${this.usuario.cpf}`);
             console.log(`Email: ${this.usuario.email}`);
+            console.log('');
             console.log("-----------------------------------------");
-
+            
         } else {
             console.log("Acesso restrito.");
         }
@@ -163,15 +165,111 @@ class Sistema{
     verListaReservas(){
         if(this.usuario instanceof Funcionario)
         {
-            console.log("------------- Lista de Reservas -------------")
-            for 
+            this.limparTela();
+            console.log("----------- Lista de Reservas -----------");
+            for(let i = 0; i < this.listaReservas.length; i++){
+                console.log('');
+                console.log(`Reserva ${i+1}:`);
+                console.log(`ID da reserva: ${this.listaReservas[i].id}`);
+                console.log(`ID do cliente: ${this.listaReservas[i].id_cliente}`);
+                console.log(`Status da reserva: ${this.listaReservas[i].status}`);
+                console.log(`Data entrada: ${this.listaReservas[i].dataEntrada}`);
+                console.log(`Data saida: ${this.listaReservas[i].dataSaida}`);
+            }
+            console.log("-----------------------------------------");
+        } else {
+            console.log("Acesso restrito.");
         }
     }
-    
-    
-    
+
+    verListaQuartos(){
+        if(this.usuario instanceof Funcionario)
+        {
+            this.limparTela();
+            console.log("----------- Lista de Quartos -----------");
+            for(let i = 0; i < this.listaQuartos.length; i++){
+                console.log('');
+                console.log(`Quarto ${this.listaQuartos[i].numeroQuarto}:`);
+                console.log(`Quantidade de camas: ${this.listaQuartos[i].quantasCamas}`);
+                console.log(`Preco por noite: R$${this.listaQuartos[i].precoPorNoite}`);
+                console.log(`Quantidade disponivel: ${this.listaQuartos[i].quantidadeDisponivel}`);
+                console.log(`Descricao: \n${this.listaQuartos[i].descricao}`);
+            }
+            console.log("-----------------------------------------");
+        } else {
+            console.log("Acesso restrito.");
+        }
+    }
+
+    verinfosCliente(infoCliente){
+        if(this.usuario instanceof Funcionario)
+        {
+            this.limparTela();
+            console.log(`----------- ${infoCliente.nome} -----------`);
+            for(let i = 0; i < infoCliente.length; i++){
+                console.log('');
+                console.log(`ID do cliente: ${this.infoCliente.id}:`);
+                console.log(`CPF: ${this.infoCliente.cpf}`);
+                console.log(`email: ${this.infoCliente.email}`);
+                console.log(`Data de nascimento: ${this.infoCliente.dataNascimento}`);
+            }
+                console.log("-----------------------------------------");
+            } else {
+                console.log("Acesso restrito.");
+            }
+    }
+
+    verListaClientes(){
+        if(this.usuario instanceof Funcionario)
+        {
+            this.limparTela();
+            console.log(`---------- Lista de Clientes -----------------`);
+            for(let i = 0; i < this.listaClientes.length; i++){
+                console.log(`${i+1}. ${this.listaClientes[i].nome}`);
+            }
+            console.log('----------------------------------------------');
+        } else {
+            console.log("Acesso restrito.");
+        }
+
+    }
+
+    mudarStatusReserva(reservaId, novoStatus){
+        if(this.usuario instanceof Funcionarios)
+        {
+            const reserva = this.reservas.find(r => r.id === reservaId);
+            if (reserva) {
+                reserva.status = novoStatus;
+                console.log("Status da reserva atualizado.");
+            } else {
+                console.log("Reserva não encontrada.");
+            }
+
+        } else {
+            console.log("Acesso restrito.");
+        }  
+    }
+
+    adicionarQuarto(nome, descricao, camas, precoPorNoite, quantidadeDisponivel) {
+        if (this.usuarioAtual instanceof Funcionario) {
+            const quarto = new Quartos(nome, descricao, camas, precoPorNoite, quantidadeDisponivel);
+            this.listaQuartos.push(quarto);
+            console.log("Quarto adicionado com sucesso!");
+        } else {
+            console.log("Acesso restrito.");
+        }
+    }
+
+
+
 }
 
 
+
+
+
+    
+
+main()
 
 //No final fazer a tela interativa com o usuario e utilizar os metodos estabelecidos no Sistema
