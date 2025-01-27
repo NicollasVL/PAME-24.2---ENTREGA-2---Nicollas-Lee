@@ -111,25 +111,21 @@ class Sistema{
         console.log(`Cliente ${nome} cadastrado com sucesso!`);
     }
 
-    login(email, senha){
-        const funcionario = this.listaFuncionarios.find(function (funcionario) {
-            return funcionario.email == email && funcionario.senha == senha;        // Dara a relacao true ou false
-        });
+    login(email, senha) {
+        const funcionario = this.listaFuncionarios.find(funcionario => funcionario.email === email && funcionario.senha === senha);
+        const cliente = this.listaClientes.find(cliente => cliente.email === email && cliente.senha === senha);
     
-        const cliente = this.listaClientes.find(function (cliente) {
-            return cliente.email == email && cliente.senha == senha;
-        });
-        
-        if(funcionario){
-            this.usuario = funcionario;
-            this.usuario.tipoUsuario = "funcionario";           // Adicionada uma propriedade para identificar se é funcionario
-            console.log(`Login realizado com sucesso! Bem-vindo ${usuario.nome} (funcionario)`);
-        } else if(cliente){
-            this.usuario = cliente;
-            this.usuario.tipoUsuario = "cliente";
-            console.log(`Login realizado com sucesso! Bem-vindo ${this.usuario.nome}`);
+        if (funcionario) {
+            this.usuario = funcionario; // Define o funcionário como o usuário atual
+            this.usuario.tipoUsuario = "funcionario"; // Adiciona o tipo de usuário
+            console.log(`Login realizado com sucesso! Bem-vindo ${this.usuario.nome} (funcionário)`);
+        } else if (cliente) {
+            this.usuario = cliente; // Define o cliente como o usuário atual
+            this.usuario.tipoUsuario = "cliente"; // Adiciona o tipo de usuário
+            console.log(`Login realizado com sucesso! Bem-vindo ${this.usuario.nome} (cliente)`);
         } else {
-            console.log("Email ou senha invalidos...");
+            this.usuario = null; // Garante que não há usuário logado
+            console.log("Email ou senha inválidos...");
         }
     }
 
@@ -228,7 +224,7 @@ class Sistema{
     }
 
     mudarStatusReserva(reservaId, novoStatus){
-        if(this.usuario instanceof Funcionarios)
+        if(this.usuario instanceof Funcionario)
         {
             const reserva = this.listaReservas.find(function (q) {
                 return q.id == reservaId;
@@ -411,24 +407,24 @@ class Sistema{
 
 // Funcoes para o main
 
-function telaFazerLogin(sistema){
+function telaFazerLogin(sistema) {
     console.clear();
-    console.log("--------- Login --------");
-    const email = prompt("Email: ");
-    const senha = prompt ("Senha: ");
+    console.log("----------- Login -----------");
+    const email = prompt("Digite seu email: ");
+    const senha = prompt("Digite sua senha: ");
 
-    sistema.login(email, senha);
+    const sucesso = sistema.login(email, senha);
 
-    if(sistema.usuario){
-    if (sistema.usuario.tipoUsuario === "funcionario")
-    {
-        menuFuncionario(sistema);
-    } else if(sistema.usuario.tipoUsuario === "cliente") 
-    {
-        menuCliente(sistema);
+    if (sucesso) {
+        if (sistema.usuario.tipoUsuario === "funcionario") {
+            console.log(`Login bem-sucedido. Bem-vindo, ${sistema.usuario.nome} (Funcionario)!`);
+            menuFuncionario(sistema); // Redireciona para o menu de funcionário
+        } else {
+            console.log(`Login bem-sucedido. Bem-vindo, ${sistema.usuario.nome} (Cliente)!`);
+            menuCliente(sistema); // Redireciona para o menu de cliente
+        }
     } else {
-        prompt("Pressione Enter para voltar ao menu")
-    }
+        prompt("Falha no login. Aperte Enter para retornar ao menu principal...");
     }
 }
 
@@ -480,7 +476,10 @@ function menuFuncionario(sistema){
         console.log("6. Adicionar Quarto");
         console.log("7. Logout");
 
+
         const opcao = prompt("Escolha uma opcao: ");
+
+        console.log("------------------------");
 
         switch(opcao){
             case "1":
@@ -533,6 +532,7 @@ function menuCliente(sistema){
         console.log("4. Cancelar Reserva");
         console.log("5. Ver Minhas Reservas");
         console.log("6. Logout");
+        console.log("--------------------");
 
         const opcao = prompt("Escolha uma opção: ");
 
@@ -579,6 +579,7 @@ function main(){
         console.log("1. Fazer Login");
         console.log("2. Fazer Cadastro");
         console.log("3. Sair do Programa");
+        console.log("-------------------------------------------------");
 
         const opcao = prompt("Escolha uma opcao: ")
 
