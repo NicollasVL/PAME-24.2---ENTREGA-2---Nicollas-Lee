@@ -12,7 +12,6 @@ class Reserva{
 }
 
 
-
 class Funcionario{
     constructor(id, nome, cpf, email, senha){
         this.id = id;
@@ -23,7 +22,6 @@ class Funcionario{
 
     }
 }
-
 
 
 class Cliente{
@@ -38,7 +36,6 @@ class Cliente{
     }
 
 }
-
 
 
 class Quartos{
@@ -69,7 +66,6 @@ class Sistema{
         console.clear();
     }
     
-    
     //funcao de gerar ID aleatorio de 5 digitos
     //ID's de comeco 0 serao funcionarios
     //ID's de comeco 1 serao clientes
@@ -97,10 +93,8 @@ class Sistema{
         return Number(id);  
     }
         
-
     //Cadastro de funcionario
-    
-    
+        
     cadastrarFuncionario(nome, cpf, email, senha){
         const id = this.gerarId(0, this.listaFuncionarios);
         const funcionario = new Funcionario(id, nome, cpf, email, senha);
@@ -417,7 +411,7 @@ class Sistema{
 
 // Funcoes para o main
 
-function telaFazerLogin(){
+function telaFazerLogin(sistema){
     console.clear();
     console.log("--------- Login --------");
     const email = prompt("Email: ");
@@ -438,7 +432,7 @@ function telaFazerLogin(){
     }
 }
 
-function telaFazerCadastro(){
+function telaFazerCadastro(sistema){
     console.clear();
     console.log("-------- Cadastro --------");
     console.log("1. Cadastro de funcionario");
@@ -462,7 +456,7 @@ function telaFazerCadastro(){
             const dataNascimento = prompt("Data de nascimento (DD/MM/AAAA): ")
             const emailCliente = prompt("Email: ");
             const senhaCliente = prompt("Senha: ");
-            sistema.cadastrarFuncionario(nomeCliente, dataNascimento, cpfCliente, emailCliente, senhaCliente);
+            sistema.cadastrarCliente(nomeCliente, dataNascimento, cpfCliente, emailCliente, senhaCliente);
             break;
         
         case "3":
@@ -607,7 +601,6 @@ function main(){
     }
 }
 
-
 main();
 
-//No final fazer a tela interativa com o usuario e utilizar os metodos estabelecidos no Sistema
+//Add as funcoes opcionais...
