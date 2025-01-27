@@ -608,6 +608,6 @@ function main(){
 }
 
 
-main()
+main();
 
 //No final fazer a tela interativa com o usuario e utilizar os metodos estabelecidos no Sistema
