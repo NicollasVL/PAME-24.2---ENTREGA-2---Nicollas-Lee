@@ -415,6 +415,8 @@ class Sistema{
 
 }
 
+// Funcoes para o main
+
 function telaFazerLogin(){
     console.clear();
     console.log("--------- Login --------");
@@ -457,7 +459,7 @@ function telaFazerCadastro(){
         case "2":
             const nomeCliente = prompt("Nome: ");
             const cpfCliente = prompt("CPF: ");
-            const dataNascimento = prompt("Data de nascimento(Dia/mes/ano): ")
+            const dataNascimento = prompt("Data de nascimento (DD/MM/AAAA): ")
             const emailCliente = prompt("Email: ");
             const senhaCliente = prompt("Senha: ");
             sistema.cadastrarFuncionario(nomeCliente, dataNascimento, cpfCliente, emailCliente, senhaCliente);
@@ -470,6 +472,107 @@ function telaFazerCadastro(){
             console.log("Opcao invalida. Tente novamente!");
     }
     prompt("Pressione Enter para continuar...");
+}
+
+function menuFuncionario(sistema){
+    while (true){
+        console.clear();
+        console.log("--- Menu Funcionário ---");
+        console.log("1. Ver Meus Dados");
+        console.log("2. Ver Lista de Reservas");
+        console.log("3. Ver Lista de Quartos");
+        console.log("4. Ver Lista de Clientes");
+        console.log("5. Mudar Status da Reserva");
+        console.log("6. Adicionar Quarto");
+        console.log("7. Logout");
+
+        const opcao = prompt("Escolha uma opcao: ");
+
+        switch(opcao){
+            case "1":
+                sistema.verDadosFuncionario();
+                break;
+            case "2":
+                sistema.verListaReservas();
+                break;
+            case "3":
+                sistema.verListaQuartos();
+                break;
+            case "4":
+                sistema.verListaClientes();
+                break;
+            case "5":
+                const reservaId = prompt("Digite o ID da reserva: ");
+                const novoStatus = prompt("Digite o novo status (pendente, adiada, realizada, cancelada): ");
+                sistema.mudarStatusReserva(Number(reservaId), novoStatus);
+                break;
+            case "6":
+                const nomeQuarto = prompt("Nome do quarto: ");
+                const descricao = prompt("Descrição: ");
+                const camas = prompt("Quantidade de camas: ");
+                const preco = prompt("Preço por noite: ");
+                const disponivel = prompt("Quantidade disponível: ");
+                sistema.adicionarQuarto(nomeQuarto, descricao, Number(camas), Number(preco), Number(disponivel));
+                break;
+            case "7":
+                sistema.logout();
+                return;
+            default:
+                console.log("Opcao invalida. Tente novamente");
+            
+
+        }
+        prompt("Pressione Enter para continuar...");
+    }
+
+}
+
+
+
+function menuCliente(sistema){
+    while (true) {
+        console.clear();
+        console.log("--- Menu Cliente ---");
+        console.log("1. Ver Meus Dados");
+        console.log("2. Ver Lista de Quartos");
+        console.log("3. Fazer Reserva");
+        console.log("4. Cancelar Reserva");
+        console.log("5. Ver Minhas Reservas");
+        console.log("6. Logout");
+
+        const opcao = prompt("Escolha uma opção: ");
+
+        switch (opcao) {
+            case "1":
+                sistema.verDadosCliente();
+                break;
+            case "2":
+                sistema.verListaQuartos();
+                break;
+            case "3":
+                const clienteId = sistema.usuario.id;
+                const dataEntrada = prompt("Digite a data de entrada (DD/MM/AAAA): ");
+                const dataSaida = prompt("Digite a data de saída (DD/MM/AAAA): ");
+                sistema.fazerReserva(clienteId, dataEntrada, dataSaida);
+                break;
+            case "4":
+                const reservaId = prompt("Digite o ID da reserva que deseja cancelar: ");
+                sistema.cancelarReserva(Number(reservaId));
+                break;
+            case "5":
+                sistema.verMinhasReservas(sistema.usuario.id);
+                break;
+            case "6":
+                sistema.logout();
+                return;
+            default:
+                console.log("Opção inválida. Tente novamente.");
+        }
+        prompt("Pressione Enter para continuar...");
+    }
+
+
+
 }
 
 
@@ -502,11 +605,6 @@ function main(){
 
         }
     }
-
-
-
-
-
 }
 
 
