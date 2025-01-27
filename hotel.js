@@ -459,7 +459,7 @@ function telaFazerCadastro(sistema){
 
     const opcao = prompt("Escolha uma opcao: ");
 
-    switch(opcao){                                          // Ver se da para verificar a data de nascimento
+    switch(opcao){                                          
         case "1":
             const nomeFuncionario = prompt("Nome: ");
             const cpfFuncionario = prompt("CPF: ");
@@ -626,5 +626,3 @@ function main(){
 }
 
 main();
-
-//Add as funcoes opcionais...
